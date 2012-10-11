@@ -2,7 +2,7 @@
 
 DWORD addrMessageBoxW = NULL;
 
-__declspec(naked) int prolog_MessagBoxW(HWND hWnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType)
+__declspec(naked) int (__stdcall prolog_MessagBoxW)(HWND hWnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType)
 {
 	__asm
 	{
@@ -13,24 +13,12 @@ __declspec(naked) int prolog_MessagBoxW(HWND hWnd, LPCWSTR lpText, LPCWSTR lpCap
 	}
 }
 
-__declspec(naked) void epilog_MessagBoxW()
-{
-	_asm
-	{
-		mov esp, ebp 
-		pop ebp  
-		ret  //epilog to pop our "custom" prolog to correct the stack
-	}
-}
-
-
 int main(int argc, char *argv[])
 {
 	HMODULE hmodUser32 = LoadLibrary(L"user32.dll");
 	addrMessageBoxW = (DWORD)GetProcAddress(hmodUser32, "MessageBoxW");
 
 	prolog_MessagBoxW(0, L"Hook Hopping", L"Hook Hopping", 0);
-	epilog_MessagBoxW();
 
 	return 0;
 }
