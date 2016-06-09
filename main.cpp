@@ -8,7 +8,7 @@ __declspec(naked) int (__stdcall prolog_MessagBoxW)(HWND hWnd, LPCWSTR lpText, L
 	{
 		push ebp
 		mov ebp, esp //"custom" implementation prolog of the standard function prolog
-		add addrMessageBoxW, 5  //add +5 to jump over prolog and hook
+		add addrMessageBoxW, 5  //add +5 to jump over prolog and skip hooks using hotpatching
 		jmp [addrMessageBoxW]  //call MessageBoxW +5  
 	}
 }
